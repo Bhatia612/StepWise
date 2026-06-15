@@ -31,7 +31,7 @@ StepWise fixes that by teaching the thought process, not just the answer.
 ## Folder Structure
 
 ### Backend
-```
+```bash
 
 src/
 ├── config/
@@ -44,7 +44,7 @@ src/
 ```
 
 ### Frontend
-```
+```bash
 
 src/
 ├── features/

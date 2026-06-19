@@ -73,7 +73,7 @@ const getAllExplanation = async (req, res, next) => {
   }
 }
 
-const getExplanationById = (req, res, next) => {
+const getExplanationById = async (req, res, next) => {
   try {
     const { id } = req.params
 

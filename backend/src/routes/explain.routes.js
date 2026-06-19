@@ -1,9 +1,11 @@
 const express = require("express");
 const explainController = require("../controllers/explain.controller");
+const { validateExplainRequest } = require('../middlewares/validate.middleware')
+
 
 const explainRoutes = express.Router();
 
-explainRoutes.post("/explain", explainController.explainProblem);
+explainRoutes.post("/explain", validateExplainRequest, explainController.explainProblem);
 
 explainRoutes.get("/explanations", explainController.getAllExplanation);
 

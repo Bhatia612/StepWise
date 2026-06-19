@@ -1,8 +1,12 @@
 const express = require("express");
-const { explainProblem } = require("../controllers/explain.controller");
+const explainController = require("../controllers/explain.controller");
 
-const router = express.Router();
+const explainRoutes = express.Router();
 
-router.post("/explain", explainProblem);
+explainRoutes.post("/explain", explainController.explainProblem);
 
-module.exports = router;
+explainRoutes.get("/explanations", explainController.getAllExplanation);
+
+explainRoutes.get("/explanations/:id", explainController.getExplanationById);
+
+module.exports = explainRoutes;

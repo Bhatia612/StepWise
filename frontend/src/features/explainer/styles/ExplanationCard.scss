@@ -23,12 +23,15 @@
   }
 
   &__label {
-    font-family: var(--font-display);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    margin-bottom: 0.5rem;
+    display: inline-block;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.75rem;
   }
 
   &__text {

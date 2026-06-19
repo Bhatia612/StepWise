@@ -26,21 +26,21 @@
   }
 
   &__button {
-    background: var(--accent);
-    color: var(--surface);
+    background: var(--ink);
+    color: var(--bg);
     border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: var(--radius-md);
+    padding: 0.65rem 1.6rem;
+    border-radius: var(--radius-pill);
     font-size: 0.9rem;
     font-weight: 500;
     transition: opacity 0.15s ease;
 
     &:hover {
-      opacity: 0.9;
+      opacity: 0.85;
     }
 
     &:disabled {
-      opacity: 0.5;
+      opacity: 0.4;
       cursor: not-allowed;
     }
   }

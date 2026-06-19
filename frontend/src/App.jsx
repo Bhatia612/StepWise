@@ -1,7 +1,13 @@
+import Navbar from "./shared/components/Navbar";
 import ExplainerPage from "./features/explainer/pages/ExplainerPage";
 
 function App() {
-  return <ExplainerPage />;
+  return (
+    <>
+      <Navbar />
+      <ExplainerPage />
+    </>
+  );
 }
 
 export default App;

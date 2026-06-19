@@ -1,30 +1,30 @@
-import { useState } from 'react'
+import { useState } from "react";
+import "../styles/ProblemInput.scss";
 
-function ProblemInput({ onSubmit, loading }) {
-    const [problem, setProblem] = useState("")
+const ProblemInput = ({ onSubmit, loading }) => {
+  const [problem, setProblem] = useState("");
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!problem || !problem.trim()) return;
+    onSubmit(problem);
+  };
 
-        if (!problem || !problem.trim()) return;
-        onSubmit(problem)
+  return (
+    <form className="problem-input" onSubmit={handleSubmit}>
+      <textarea
+        value={problem}
+        onChange={(e) => setProblem(e.target.value)}
+        placeholder="Paste your DSA problem here..."
+        rows={6}
+      />
+      <div className="problem-input__footer">
+        <button className="problem-input__button" type="submit" disabled={loading}>
+          {loading ? "Thinking..." : "Explain"}
+        </button>
+      </div>
+    </form>
+  );
+};
 
-
-    }
-    return (
-        <form onSubmit={handleSubmit}>
-            <textarea
-                name="problem"
-                id="problem"
-                value={problem}
-                onChange={e => { setProblem(e.target.value) }}
-                placeholder="Paste your DSA problem here..."
-            />
-            <button type='submit' disabled={loading}>
-                {loading ? "Thinking . . ." : "Explain"}
-            </button>
-        </form>
-    )
-}
-
-export default ProblemInput
+export default ProblemInput;

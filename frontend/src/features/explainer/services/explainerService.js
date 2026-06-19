@@ -10,7 +10,7 @@ export const getAllExplanation = async () => {
     return response.data
 }
 
-export const explainProblem = async (id) => {
+export const getExplanationById = async (id) => {
     const response = await api.get(`/explanations/${id}`);
     return response.data
 }

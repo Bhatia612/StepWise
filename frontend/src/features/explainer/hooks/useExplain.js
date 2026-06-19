@@ -2,7 +2,7 @@ import { useState } from "react";
 import { explainProblem } from "../services/explainerService";
 
 const useExplain = () => {
-    const [date, setData] = useState(null)
+    const [data, setData] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 

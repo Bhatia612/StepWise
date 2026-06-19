@@ -98,16 +98,9 @@ Full guide → see [ENVIRONMENT.md](./ENVIRONMENT.md)
 
 ---
 
-## Changelog
-
-Full log → see [CHANGELOG.md](./CHANGELOG.md)
-
----
-
 ## Author
 
-Built by [Your Name] as a portfolio project.
-Learning log and blog posts included in /blog
+MOHIT SINGH BHATIA
 
 ```
 ```

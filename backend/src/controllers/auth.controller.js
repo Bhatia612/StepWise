@@ -1,14 +1,14 @@
 const jwt = require("jsonwebtoken")
 const User = require("../models/user.model")
 
-const genrateToken = (userId) => {
+const generateToken = (userId) => {
     return jwt.sign({ userId }, process.env.JWT_SECRET, {
         expiresIn: "2d",
     })
 }
 
 const setAuthCookies = (res, token) => {
-    res.cookies("token", token, {
+    res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -16,12 +16,11 @@ const setAuthCookies = (res, token) => {
     })
 }
 
-const signUpController = (req, res, next) => {
+const signUpController = async (req, res, next) => {
     try {
         const { username, email, password } = req.body
 
         const existingUser = await User.findOne({ $or: [{ username }, { email }] })
-
 
         if (existingUser) {
             return res.status(400).json({
@@ -36,7 +35,7 @@ const signUpController = (req, res, next) => {
             password
         })
 
-        const token = genrateToken(user._id)
+        const token = generateToken(user._id)
         setAuthCookies(res, token)
 
         res.status(200).json({
@@ -52,7 +51,7 @@ const signUpController = (req, res, next) => {
     }
 }
 
-const logInController = (req, res, next) => {
+const logInController = async (req, res, next) => {
     try {
         const { identifier, password } = req.body
 
@@ -67,7 +66,7 @@ const logInController = (req, res, next) => {
             })
         }
 
-        const isMatched = await user.comparePassword(password)
+        const isMatch = await user.comparePassword(password)
 
         if (!isMatch) {
             return res.status(401).json({
@@ -77,8 +76,7 @@ const logInController = (req, res, next) => {
         }
 
         const token = generateToken(user._id);
-        setAuthCookie(res, token);
-
+        setAuthCookies(res, token);
 
         res.status(200).json({
             success: true,
@@ -94,8 +92,7 @@ const logInController = (req, res, next) => {
     }
 }
 
-
-const logOutController = (req, res) => {
+const logOutController = async (req, res) => {
     res.clearCookie("token");
     res.status(200).json({
         success: true,

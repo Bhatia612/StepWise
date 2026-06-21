@@ -18,6 +18,11 @@ const traceSchema = new mongoose.Schema(
 
 const explanationSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
     problem: {
       type: String,
       required: true,

@@ -59,6 +59,7 @@ Problem: ${problem}`,
       traceNote: parsed.traceNote,
       pitfalls: parsed.pitfalls,
       complexity: parsed.complexity,
+      userId: req.user ? req.user._id : undefined,
     });
 
     res.status(200).json({
@@ -72,7 +73,9 @@ Problem: ${problem}`,
 
 const getAllExplanations = async (req, res, next) => {
   try {
-    const explanations = await Explanation.find().sort({ createdAt: -1 });
+    const filter = req.user ? { userId: req.user._id } : {};
+
+    const explanations = await Explanation.find(filter).sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,

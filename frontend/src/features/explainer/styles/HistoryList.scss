@@ -1,0 +1,128 @@
+.history-list {
+  margin-top: 1.5rem;
+
+  &__searchbar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 1rem;
+    margin-bottom: 1rem;
+
+    input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 0.9rem;
+      color: var(--ink);
+
+      &::placeholder {
+        color: var(--muted);
+      }
+    }
+  }
+
+  &__filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__filter {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 0.4rem 0.9rem;
+
+    &--active {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+  }
+
+  &__group {
+    margin-bottom: 1.5rem;
+  }
+
+  &__group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.5rem;
+  }
+
+  &__group-count {
+    background: var(--border);
+    color: var(--ink);
+    font-size: 0.7rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: var(--radius-pill);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    text-align: left;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: var(--ink);
+      margin-left: .3rem;
+    }
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &__problem {
+    flex: 1;
+    font-size: 0.9rem;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__time {
+    font-size: 0.8rem;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  &__chevron {
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  &__status {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-align: center;
+  }
+}

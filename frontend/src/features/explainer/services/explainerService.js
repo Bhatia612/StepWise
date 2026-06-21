@@ -5,7 +5,7 @@ export const explainProblem = async (problem) => {
     return response.data
 }
 
-export const getAllExplanation = async () => {
+export const getAllExplanations = async () => {
     const response = await api.get("/explanations");
     return response.data
 }

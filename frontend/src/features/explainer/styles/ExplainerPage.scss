@@ -20,4 +20,29 @@
     font-size: 1rem;
     color: var(--muted);
   }
+
+  &__toggle-row {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 0;
+  }
+
+  &__error {
+    color: #C75450;
+    font-size: 0.9rem;
+    margin: 1rem 0;
+  }
+
+  &__back {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 1rem 0;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--ink);
+    }
+  }
 }

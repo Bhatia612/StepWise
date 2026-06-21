@@ -1,5 +1,6 @@
 const Anthropic = require("@anthropic-ai/sdk");
 const Explanation = require("../models/explanation.model");
+const { redisClient } = require("../config/redis");
 
 const client = new Anthropic.Anthropic();
 
@@ -50,7 +51,7 @@ Problem: ${problem}`,
     const cleaned = raw.replace(/```json|```/g, "").trim();
     const parsed = JSON.parse(cleaned);
 
-    const saved = await Explanation.create({
+    const explanationData = {
       problem,
       pattern: parsed.pattern,
       difficulty: parsed.difficulty,
@@ -59,12 +60,35 @@ Problem: ${problem}`,
       traceNote: parsed.traceNote,
       pitfalls: parsed.pitfalls,
       complexity: parsed.complexity,
-      userId: req.user ? req.user._id : undefined,
+      createdAt: new Date().toISOString(),
+    };
+
+    if (req.user) {
+      const saved = await Explanation.create({
+        ...explanationData,
+        userId: req.user._id,
+      });
+
+      return res.status(200).json({
+        success: true,
+        data: saved,
+      });
+    }
+
+    const redisKey = `guest:${req.guestSessionId}`;
+    const existing = await redisClient.get(redisKey);
+    const history = existing ? JSON.parse(existing) : [];
+
+    const entryWithId = { _id: `guest-${Date.now()}`, ...explanationData };
+    history.unshift(entryWithId);
+
+    await redisClient.set(redisKey, JSON.stringify(history), {
+      EX: 24 * 60 * 60,
     });
 
     res.status(200).json({
       success: true,
-      data: saved,
+      data: entryWithId,
     });
   } catch (error) {
     next(error);
@@ -73,13 +97,22 @@ Problem: ${problem}`,
 
 const getAllExplanations = async (req, res, next) => {
   try {
-    const filter = req.user ? { userId: req.user._id } : {};
+    if (req.user) {
+      const explanations = await Explanation.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
-    const explanations = await Explanation.find(filter).sort({ createdAt: -1 });
+      return res.status(200).json({
+        success: true,
+        data: explanations,
+      });
+    }
+
+    const redisKey = `guest:${req.guestSessionId}`;
+    const existing = await redisClient.get(redisKey);
+    const history = existing ? JSON.parse(existing) : [];
 
     res.status(200).json({
       success: true,
-      data: explanations,
+      data: history,
     });
   } catch (error) {
     next(error);

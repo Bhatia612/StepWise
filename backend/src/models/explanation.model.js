@@ -1,5 +1,21 @@
 const mongoose = require("mongoose");
 
+const sectionSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+  },
+  { _id: false }
+);
+
+const traceSchema = new mongoose.Schema(
+  {
+    step: { type: String, required: true },
+    detail: { type: String, required: true },
+  },
+  { _id: false }
+);
+
 const explanationSchema = new mongoose.Schema(
   {
     problem: {
@@ -7,26 +23,40 @@ const explanationSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    explanation: {
+    pattern: {
       type: String,
       required: true,
-    },
-    approach: {
-      type: String,
-      required: true,
-    },
-    complexity: {
-      time: { type: String, required: true },
-      space: { type: String, required: true },
-    },
-    tags: {
-      type: [String],
-      default: [],
     },
     difficulty: {
       type: String,
       enum: ["easy", "medium", "hard"],
-      default: "medium",
+      required: true,
+    },
+    sections: {
+      type: [sectionSchema],
+      required: true,
+    },
+    trace: {
+      type: [traceSchema],
+      default: [],
+    },
+    traceNote: {
+      type: String,
+      default: "",
+    },
+    pitfalls: {
+      type: [String],
+      default: [],
+    },
+    complexity: {
+      time: { type: String, required: true },
+      timeReason: { type: String, required: true },
+      space: { type: String, required: true },
+      spaceReason: { type: String, required: true },
+    },
+    tags: {
+      type: [String],
+      default: [],
     },
   },
   { timestamps: true }

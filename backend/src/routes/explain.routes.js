@@ -7,7 +7,7 @@ const explainRoutes = express.Router();
 
 explainRoutes.post("/explain", validateExplainRequest, explainController.explainProblem);
 
-explainRoutes.get("/explanations", explainController.getAllExplanation);
+explainRoutes.get("/explanations", explainController.getAllExplanations);
 
 explainRoutes.get("/explanations/:id", explainController.getExplanationById);
 

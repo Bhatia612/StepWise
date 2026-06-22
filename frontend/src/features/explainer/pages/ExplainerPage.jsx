@@ -40,17 +40,17 @@ const ExplainerPage = () => {
 
       <ProblemInput onSubmit={explain} loading={loading} />
 
-      <div className="explainer-page__toggle-row">
-        <HistoryToggle showingHistory={showingHistory} onToggle={handleToggle} />
-      </div>
-
-      {error && <p className="explainer-page__error">{error}</p>}
-
-      {selected && (
+      {selected ? (
         <button className="explainer-page__back" onClick={handleBack}>
           ‹ Back to history
         </button>
+      ) : (
+        <div className="explainer-page__toggle-row">
+          <HistoryToggle showingHistory={showingHistory} onToggle={handleToggle} />
+        </div>
       )}
+
+      {error && <p className="explainer-page__error">{error}</p>}
 
       {showingHistory ? (
         <HistoryList

@@ -25,6 +25,11 @@
     }
   }
 
+  &__search-icon {
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
   &__filters {
     display: flex;
     gap: 0.5rem;

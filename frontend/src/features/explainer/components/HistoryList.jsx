@@ -1,3 +1,4 @@
+import { Search } from "lucide-react";
 import groupByPattern from "../../../shared/utils/groupByPattern";
 import formatRelativeTime from "../../../shared/utils/formatRelativeTime";
 import "../styles/HistoryList.scss";
@@ -18,7 +19,7 @@ const HistoryList = ({ history, loading, error, onSelect }) => {
   return (
     <div className="history-list">
       <div className="history-list__searchbar">
-        <span className="history-list__search-icon">🔍</span>
+        <Search size={16} className="history-list__search-icon" />
         <input
           type="text"
           placeholder="Search problems or patterns..."

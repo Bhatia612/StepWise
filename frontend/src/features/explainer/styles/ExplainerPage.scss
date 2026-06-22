@@ -21,6 +21,25 @@
     color: var(--muted);
   }
 
+  .history-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: none;
+    font-size: 0.85rem;
+    color: var(--muted);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--ink);
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
   &__toggle-row {
     display: flex;
     justify-content: flex-end;

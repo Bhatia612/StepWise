@@ -1,8 +1,19 @@
+import { Clock, ArrowLeft } from "lucide-react";
+
 const HistoryToggle = ({ showingHistory, onToggle }) => {
   return (
     <button className="history-toggle" onClick={onToggle}>
-      <span className="history-toggle__icon">🕒</span>
-      {showingHistory ? "Back to explainer" : "History"}
+      {showingHistory ? (
+        <>
+          <ArrowLeft size={15} />
+          Back to explainer
+        </>
+      ) : (
+        <>
+          <Clock size={15} />
+          History
+        </>
+      )}
     </button>
   );
 };

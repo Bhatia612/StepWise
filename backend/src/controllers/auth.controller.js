@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
 const User = require("../models/user.model")
+const migrateGuestHistory = require("../utils/migrateGuestHistory")
 
 const generateToken = (userId) => {
     return jwt.sign({ userId }, process.env.JWT_SECRET, {
@@ -35,6 +36,13 @@ const signUpController = async (req, res, next) => {
             password
         })
 
+        const guestSessionId = req.cookies.guestSessionId
+        const migratedCount = await migrateGuestHistory(guestSessionId, user._id)
+
+        if (guestSessionId) {
+            res.clearCookie("guestSessionId")
+        }
+
         const token = generateToken(user._id)
         setAuthCookies(res, token)
 
@@ -44,7 +52,8 @@ const signUpController = async (req, res, next) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
-            }
+            },
+            migratedExplanations: migratedCount
         })
     } catch (error) {
         next(error)

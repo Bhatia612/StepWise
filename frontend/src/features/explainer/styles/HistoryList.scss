@@ -131,3 +131,16 @@
     text-align: center;
   }
 }
+
+
+@media (max-width: 480px) {
+  .history-list {
+    &__problem {
+      font-size: 0.85rem;
+    }
+
+    &__time {
+      display: none;
+    }
+  }
+}

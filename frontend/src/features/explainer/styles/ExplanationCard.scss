@@ -186,3 +186,29 @@
     line-height: 1.5;
   }
 }
+
+@media (max-width: 480px) {
+  .explanation-card {
+    &__complexity {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    &__meta {
+      flex-wrap: wrap;
+    }
+
+    &__trace-row {
+      flex-direction: column;
+      gap: 0.4rem;
+
+       & > * {
+        width: fit-content;
+       }
+    }
+
+    &__trace-step {
+      white-space: normal;
+    }
+  }
+}

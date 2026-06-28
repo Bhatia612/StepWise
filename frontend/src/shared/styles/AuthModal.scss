@@ -97,3 +97,21 @@
     }
   }
 }
+
+
+@media (max-width: 600px) {
+  .auth-modal {
+    padding: 2rem 1.5rem;
+    width: 92%;
+
+    &__panels {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    &__divider {
+      width: 100%;
+      height: 1px;
+    }
+  }
+}

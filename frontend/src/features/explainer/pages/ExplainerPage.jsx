@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../../../shared/context/AuthContext";
 import useExplain from "../hooks/useExplain";
 import useHistory from "../hooks/useHistory";
 import ProblemInput from "../components/ProblemInput";
@@ -8,10 +9,22 @@ import HistoryList from "../components/HistoryList";
 import "../styles/ExplainerPage.scss";
 
 const ExplainerPage = () => {
+  const { user } = useAuth();
   const { data, loading, error, explain } = useExplain();
   const { history, loading: historyLoading, error: historyError, fetchHistory } = useHistory();
   const [showingHistory, setShowingHistory] = useState(false);
   const [selected, setSelected] = useState(null);
+
+  useEffect(() => {
+    setShowingHistory(false);
+    setSelected(null);
+  }, [user]);
+
+  const handleExplainSubmit = (problem) => {
+    setShowingHistory(false);
+    setSelected(null);
+    explain(problem);
+  };
 
   const handleToggle = () => {
     if (!showingHistory) fetchHistory();
@@ -38,7 +51,7 @@ const ExplainerPage = () => {
         <p className="explainer-page__tagline">Understand the problem before you write the code.</p>
       </div>
 
-      <ProblemInput onSubmit={explain} loading={loading} />
+      <ProblemInput onSubmit={handleExplainSubmit} loading={loading} />
 
       {selected ? (
         <button className="explainer-page__back" onClick={handleBack}>

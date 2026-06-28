@@ -1,0 +1,99 @@
+.auth-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 15, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.auth-modal {
+  position: relative;
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  width: 90%;
+  max-width: 640px;
+
+  &__close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--ink);
+    }
+  }
+
+  &__panels {
+    display: flex;
+    gap: 2rem;
+  }
+
+  &__panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  &__divider {
+    width: 1px;
+    background: var(--border);
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  &__panel input {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 0.9rem;
+    font-size: 0.9rem;
+    background: var(--surface);
+    color: var(--ink);
+    outline: none;
+
+    &::placeholder {
+      color: var(--muted);
+    }
+
+    &:focus {
+      border-color: var(--ink);
+    }
+  }
+
+  &__error {
+    font-size: 0.8rem;
+    color: #C75450;
+  }
+
+  &__submit {
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    padding: 0.65rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}

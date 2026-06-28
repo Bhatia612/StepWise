@@ -1,13 +1,37 @@
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import AuthModal from "./AuthModal";
 import "../styles/Navbar.scss";
 
 const Navbar = () => {
+  const { user, logout } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
   return (
-    <nav className="navbar">
-      <span className="navbar__logo">StepWise</span>
-      <div className="navbar__links">
-        <a href="#" className="navbar__link navbar__link--accent">Sign in</a>
-      </div>
-    </nav>
+    <>
+      <nav className="navbar">
+        <span className="navbar__logo">StepWise</span>
+        <div className="navbar__links">
+          {user ? (
+            <>
+              <span className="navbar__link">{user.username}</span>
+              <button className="navbar__link navbar__link--accent" onClick={logout}>
+                Log out
+              </button>
+            </>
+          ) : (
+            <button
+              className="navbar__link navbar__link--accent"
+              onClick={() => setShowAuthModal(true)}
+            >
+              Sign in
+            </button>
+          )}
+        </div>
+      </nav>
+
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
+    </>
   );
 };
 

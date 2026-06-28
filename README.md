@@ -1,11 +1,8 @@
-Got it — here is **only the README.md content**, clean and ready to copy:
-
-```markdown
 # StepWise 🧠
 
 A full-stack web app that helps junior developers understand DSA problems step-by-step — without jumping straight to code.
 
-StepWise acts as a **thinking coach**: given a LeetCode-style problem, it breaks down the intuition, approach, and complexity in plain English before showing any solution.
+StepWise acts as a **thinking coach**: given a LeetCode-style problem, it breaks down the pattern, intuition, a worked trace, common pitfalls, and time/space complexity in plain English before showing any solution.
 
 ---
 
@@ -21,43 +18,74 @@ StepWise fixes that by teaching the thought process, not just the answer.
 
 | Layer | Technology |
 |---|---|
-| Frontend | React (Vite) |
+| Frontend | React (Vite), SCSS |
 | Backend | Node.js + Express |
-| Database | MongoDB (Mongoose) |
+| Database | MongoDB (Mongoose) — permanent storage for registered users |
+| Cache / Sessions | Redis — guest sessions (24h auto-expiry) and rate limiting |
+| Auth | JWT in httpOnly cookies |
 | AI | Claude API (claude-sonnet-4-6) |
+
+---
+
+## Key Features
+
+- **Structured explanations** — pattern, difficulty, adaptable sections, a worked-example trace, common pitfalls, and complexity with reasoning — tailored per problem, not a fixed template
+- **Guest mode** — use the app without an account; history is kept in Redis for 24 hours
+- **Accounts** — sign up to keep explanation history permanently
+- **Guest-to-account migration** — signing up automatically moves your guest history into your new account
+- **Rate limiting** — Redis-backed, protects the Claude API from abuse
 
 ---
 
 ## Folder Structure
 
-### Backend
-```bash
-
+### Backend (`backend/`)
 src/
-├── config/
-├── controllers/
-├── middlewares/
-├── models/
-├── routes/
-└── server.js
 
-```
+├── config/         # MongoDB and Redis connections
 
-### Frontend
-```bash
+├── controllers/    # Business logic per route
 
+├── middlewares/    # Auth, validation, rate limiting, error handling
+
+├── models/         # Mongoose schemas (User, Explanation)
+
+├── routes/         # URL → controller mappings
+
+├── utils/          # Small reusable helpers (e.g. guest migration)
+
+└── server.js       # Entry point
+
+### Frontend (`frontend/`)
 src/
+
 ├── features/
-│   └── feature-name/
-│       ├── pages/
-│       ├── components/
-│       ├── hooks/
-│       ├── services/
-│       └── styles/
-├── shared/
-└── main.jsx
 
-````
+│   └── explainer/
+
+│       ├── pages/        # ExplainerPage
+
+│       ├── components/   # ProblemInput, ExplanationCard, HistoryList, HistoryToggle
+
+│       ├── hooks/        # useExplain, useHistory
+
+│       ├── services/     # explainerService
+
+│       └── styles/
+
+├── shared/
+
+│   ├── components/  # Navbar, AuthModal
+
+│   ├── context/     # AuthContext
+
+│   ├── services/    # api.js, authService.js
+
+│   ├── styles/      # design tokens, global styles
+
+│   └── utils/       # formatRelativeTime, groupByPattern
+
+└── main.jsx
 
 ---
 
@@ -65,21 +93,21 @@ src/
 
 ### Prerequisites
 - Node.js v18+
-- MongoDB (local or Atlas)
-- Anthropic API Key
+- MongoDB Atlas account (or local MongoDB)
+- Redis Cloud account (or local Redis)
+- Anthropic API key
 
 ### Backend
 ```bash
-cd stepwise-backend
+cd backend
 npm install
-cp .env.example .env
+cp .env.example .env   # fill in your values — see ENVIRONMENT.md
 npm run dev
-````
+```
 
 ### Frontend
-
 ```bash
-cd stepwise-frontend
+cd frontend
 npm install
 npm run dev
 ```
@@ -88,19 +116,22 @@ npm run dev
 
 ## API Overview
 
-Full API contract → see [API_CONTRACT.md](./API_CONTRACT.md)
+Full API contract → see [`API_CONTRACT.md`](./API_CONTRACT.md)
 
----
+## Architecture
+
+System design overview → see [`ARCHITECTURE.md`](./ARCHITECTURE.md)
 
 ## Environment Variables
 
-Full guide → see [ENVIRONMENT.md](./ENVIRONMENT.md)
+Full guide → see [`ENVIRONMENT.md`](./ENVIRONMENT.md)
+
+## Changelog
+
+Full log → see [`CHANGELOG.md`](./CHANGELOG.md)
 
 ---
 
 ## Author
 
-MOHIT SINGH BHATIA
-
-```
-```
+Built by Mohit as a portfolio project.

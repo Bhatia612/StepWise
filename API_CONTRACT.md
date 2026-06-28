@@ -38,8 +38,8 @@ Auth state is detected automatically per request — no special header needed. T
 **Request Body:**
 ```json
 {
-  "username": "johndoe",
-  "email": "john@example.com",
+  "username": "mohitk",
+  "email": "mohit@stepwise.dev",
   "password": "at least 6 characters"
 }
 ```
@@ -50,8 +50,8 @@ Auth state is detected automatically per request — no special header needed. T
   "success": true,
   "data": {
     "id": "64abc...",
-    "username": "johndoe",
-    "email": "john@example.com"
+    "username": "mohitk",
+    "email": "mohit@stepwise.dev"
   }
 }
 ```
@@ -74,7 +74,7 @@ Sets an httpOnly `token` cookie (7 day expiry).
 **Request Body:**
 ```json
 {
-  "identifier": "johndoe or john@example.com",
+  "identifier": "mohitk or mohit@stepwise.dev",
   "password": "at least 6 characters"
 }
 ```
@@ -85,8 +85,8 @@ Sets an httpOnly `token` cookie (7 day expiry).
   "success": true,
   "data": {
     "id": "64abc...",
-    "username": "johndoe",
-    "email": "john@example.com"
+    "username": "mohitk",
+    "email": "mohit@stepwise.dev"
   }
 }
 ```
@@ -103,28 +103,6 @@ Sets an httpOnly `token` cookie (7 day expiry).
 
 ---
 
-### Get Current User
-
-**GET** `/api/v1/auth/me`
-
-Requires a valid `token` cookie.
-
-**Success Response — 200:**
-```json
-{
-  "success": true,
-  "data": { "id": "64abc...", "username": "johndoe", "email": "john@example.com" }
-}
-```
-
-**Error Responses:**
-
-| Status | Meaning |
-|---|---|
-| `401` | Not authenticated or invalid/expired token |
-
----
-
 ### Log Out
 
 **POST** `/api/v1/auth/logout`
@@ -135,6 +113,28 @@ Requires a valid `token` cookie.
 ```
 
 Clears the `token` cookie.
+
+---
+
+### Get Current User
+
+**GET** `/api/v1/auth/me`
+
+Requires a valid `token` cookie.
+
+**Success Response — 200:**
+```json
+{
+  "success": true,
+  "data": { "id": "64abc...", "username": "mohitk", "email": "mohit@stepwise.dev" }
+}
+```
+
+**Error Responses:**
+
+| Status | Meaning |
+|---|---|
+| `401` | Not authenticated or invalid/expired token |
 
 ---
 

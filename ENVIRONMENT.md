@@ -11,10 +11,20 @@ cp .env.example .env
 | Variable | Description | Example |
 |---|---|---|
 | `PORT` | Port the Express server runs on | `5000` |
+| `NODE_ENV` | Environment mode — affects cookie security settings | `development` |
 | `MONGO_URI` | MongoDB connection string from Atlas | `mongodb+srv://...` |
 | `ANTHROPIC_API_KEY` | Claude API key from console.anthropic.com | `sk-ant-...` |
+| `JWT_SECRET` | Random secret used to sign auth tokens | generate with the command below |
+| `REDIS_URL` | Redis Cloud connection string, used for guest sessions and rate limiting | `redis://default:password@host:port` |
 
-## Where to get them
+## Generating JWT_SECRET
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+## Where to get the others
 
 - **MONGO_URI** → [MongoDB Atlas](https://cloud.mongodb.com) → your cluster → Connect → Drivers
 - **ANTHROPIC_API_KEY** → [Anthropic Console](https://console.anthropic.com) → API Keys
+- **REDIS_URL** → [Redis Cloud](https://cloud.redis.io) → your database → Configuration → Public endpoint + password

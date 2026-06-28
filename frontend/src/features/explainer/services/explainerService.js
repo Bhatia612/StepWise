@@ -1,4 +1,4 @@
-import api from "../../shared/services/api"
+import api from "../../../shared/services/api"
 
 export const explainProblem = async (problem) => {
     const response = await api.post("/explain", { problem });

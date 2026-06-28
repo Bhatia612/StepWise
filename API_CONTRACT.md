@@ -103,6 +103,28 @@ Sets an httpOnly `token` cookie (7 day expiry).
 
 ---
 
+### Get Current User
+
+**GET** `/api/v1/auth/me`
+
+Requires a valid `token` cookie.
+
+**Success Response — 200:**
+```json
+{
+  "success": true,
+  "data": { "id": "64abc...", "username": "johndoe", "email": "john@example.com" }
+}
+```
+
+**Error Responses:**
+
+| Status | Meaning |
+|---|---|
+| `401` | Not authenticated or invalid/expired token |
+
+---
+
 ### Log Out
 
 **POST** `/api/v1/auth/logout`

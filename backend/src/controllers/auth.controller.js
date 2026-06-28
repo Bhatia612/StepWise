@@ -101,6 +101,17 @@ const logInController = async (req, res, next) => {
     }
 }
 
+const getMeController = (req, res) => {
+    res.status(200).json({
+        success: true,
+        data: {
+            id: req.user._id,
+            username: req.user.username,
+            email: req.user.email,
+        }
+    })
+}
+
 const logOutController = async (req, res) => {
     res.clearCookie("token");
     res.status(200).json({
@@ -109,4 +120,4 @@ const logOutController = async (req, res) => {
     });
 };
 
-module.exports = { signUpController, logInController, logOutController };
+module.exports = { signUpController, logInController, logOutController, getMeController };

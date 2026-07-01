@@ -6,6 +6,7 @@ import ProblemInput from "../components/ProblemInput";
 import ExplanationCard from "../components/ExplanationCard";
 import HistoryToggle from "../components/HistoryToggle";
 import HistoryList from "../components/HistoryList";
+import EmptyState from "../components/EmptyState";
 import "../styles/ExplainerPage.scss";
 
 const ExplainerPage = () => {
@@ -43,6 +44,7 @@ const ExplainerPage = () => {
   };
 
   const displayedExplanation = selected || data;
+  const showEmptyState = !displayedExplanation && !loading && !showingHistory;
 
   return (
     <div className="explainer-page">
@@ -72,6 +74,8 @@ const ExplainerPage = () => {
           error={historyError}
           onSelect={handleSelect}
         />
+      ) : showEmptyState ? (
+        <EmptyState onSelect={handleExplainSubmit} />
       ) : (
         <ExplanationCard explanation={displayedExplanation} />
       )}

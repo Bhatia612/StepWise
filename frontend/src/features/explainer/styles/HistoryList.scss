@@ -1,57 +1,6 @@
 .history-list {
   margin-top: 1.5rem;
 
-  &__searchbar {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 0.65rem 1rem;
-    margin-bottom: 1rem;
-
-    input {
-      border: none;
-      outline: none;
-      background: transparent;
-      width: 100%;
-      font-size: 0.9rem;
-      color: var(--ink);
-
-      &::placeholder {
-        color: var(--muted);
-      }
-    }
-  }
-
-  &__search-icon {
-    color: var(--muted);
-    flex-shrink: 0;
-  }
-
-  &__filters {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  &__filter {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--ink);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-pill);
-    padding: 0.4rem 0.9rem;
-
-    &--active {
-      background: var(--ink);
-      color: var(--bg);
-      border-color: var(--ink);
-    }
-  }
-
   &__group {
     margin-bottom: 1.5rem;
   }
@@ -89,11 +38,11 @@
     border-radius: var(--radius-md);
     padding: 0.85rem 1.1rem;
     margin-bottom: 0.5rem;
-    transition: all 0.3s ease;
+    transition: border-color 0.15s ease, margin-left 0.15s ease;
 
     &:hover {
       border-color: var(--ink);
-      margin-left: .3rem;
+      margin-left: 0.3rem;
     }
   }
 
@@ -130,11 +79,16 @@
     color: var(--muted);
     text-align: center;
   }
-}
 
+  @media (max-width: 480px) {
+    &__item {
+      padding: 0.75rem 0.9rem;
 
-@media (max-width: 480px) {
-  .history-list {
+      &:hover {
+        margin-left: 0;
+      }
+    }
+
     &__problem {
       font-size: 0.85rem;
     }

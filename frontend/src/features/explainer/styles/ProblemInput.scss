@@ -6,7 +6,6 @@
 
   textarea {
     width: 100%;
-    border: none;
     outline: none;
     resize: none;
     font-size: 1rem;
@@ -29,7 +28,6 @@
   &__button {
     background: var(--ink);
     color: var(--bg);
-    border: none;
     padding: 0.65rem 1.6rem;
     border-radius: var(--radius-pill);
     font-size: 0.9rem;
@@ -43,6 +41,19 @@
     &:disabled {
       opacity: 0.4;
       cursor: not-allowed;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+
+    &__button {
+      width: 100%;
+      text-align: center;
+    }
+
+    &__footer {
+      margin-top: 0.6rem;
     }
   }
 }

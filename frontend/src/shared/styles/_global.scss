@@ -11,13 +11,26 @@ body {
   color: var(--ink);
   font-family: var(--font-body);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 button {
   font-family: var(--font-body);
   cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
 }
 
-textarea, input {
+textarea,
+input {
   font-family: var(--font-body);
+  border: none;
+  background: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
 }

@@ -77,6 +77,7 @@
     font-size: 0.95rem;
     color: var(--ink);
     line-height: 1.7;
+    word-break: break-word;
   }
 
   &__trace {
@@ -103,12 +104,14 @@
     border-radius: var(--radius-sm);
     height: fit-content;
     white-space: nowrap;
+    flex-shrink: 0;
   }
 
   &__trace-detail {
     font-size: 0.9rem;
     color: var(--ink);
     line-height: 1.6;
+    word-break: break-word;
   }
 
   &__trace-note {
@@ -144,6 +147,7 @@
     color: var(--ink);
     padding: 0.4rem 0;
     border-bottom: 1px solid var(--border);
+    word-break: break-word;
 
     &:last-child {
       border-bottom: none;
@@ -185,30 +189,31 @@
     color: var(--muted);
     line-height: 1.5;
   }
-}
 
-@media (max-width: 480px) {
-  .explanation-card {
-    &__complexity {
-      flex-direction: column;
-      gap: 1.5rem;
-    }
+  @media (max-width: 480px) {
+    margin-top: 2rem;
 
     &__meta {
       flex-wrap: wrap;
     }
 
+    &__complexity {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
     &__trace-row {
       flex-direction: column;
       gap: 0.4rem;
-
-       & > * {
-        width: fit-content;
-       }
     }
 
     &__trace-step {
       white-space: normal;
+      align-self: flex-start;
+    }
+
+    &__complexity-value {
+      font-size: 1.2rem;
     }
   }
 }

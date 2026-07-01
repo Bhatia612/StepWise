@@ -1,0 +1,60 @@
+@keyframes shimmer {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.explanation-skeleton {
+  margin-top: 3rem;
+  animation: shimmer 1.5s ease-in-out infinite;
+
+  &__meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  &__chip {
+    height: 28px;
+    width: 140px;
+    background: var(--border);
+    border-radius: var(--radius-pill);
+
+    &--sm {
+      width: 60px;
+    }
+  }
+
+  &__section {
+    height: 80px;
+    background: var(--border);
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+
+    &--tall {
+      height: 120px;
+    }
+  }
+
+  &__complexity {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  &__complexity-item {
+    flex: 1;
+    height: 60px;
+    background: var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  @media (max-width: 480px) {
+    &__complexity {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+}

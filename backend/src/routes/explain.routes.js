@@ -4,12 +4,15 @@ const { validateExplainRequest } = require("../middlewares/validate.middleware")
 const auth = require("../middlewares/auth.middleware");
 const guestSession = require("../middlewares/guestSession.middleware");
 const { explainLimiter, generalLimiter } = require("../middlewares/rateLimiter.middleware");
+const protect = require("../middlewares/protect.middleware")
+
 
 const explainRoutes = express.Router();
 
 explainRoutes.post(
   "/explain",
   explainLimiter,
+  // protect,
   auth,
   guestSession,
   validateExplainRequest,

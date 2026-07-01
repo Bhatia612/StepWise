@@ -7,11 +7,12 @@ import ExplanationCard from "../components/ExplanationCard";
 import HistoryToggle from "../components/HistoryToggle";
 import HistoryList from "../components/HistoryList";
 import EmptyState from "../components/EmptyState";
+import ExplanationSkeleton from "../components/ExplanationSkeleton";
 import "../styles/ExplainerPage.scss";
 
 const ExplainerPage = () => {
   const { user } = useAuth();
-  const { data, loading, error, explain } = useExplain();
+  const { data, loading, error, explain, reset } = useExplain();
   const { history, loading: historyLoading, error: historyError, fetchHistory } = useHistory();
   const [showingHistory, setShowingHistory] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -19,6 +20,7 @@ const ExplainerPage = () => {
   useEffect(() => {
     setShowingHistory(false);
     setSelected(null);
+    reset();
   }, [user]);
 
   const handleExplainSubmit = (problem) => {
@@ -74,6 +76,8 @@ const ExplainerPage = () => {
           error={historyError}
           onSelect={handleSelect}
         />
+      ) : loading ? (
+        <ExplanationSkeleton />
       ) : showEmptyState ? (
         <EmptyState onSelect={handleExplainSubmit} />
       ) : (

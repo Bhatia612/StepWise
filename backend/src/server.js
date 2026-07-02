@@ -22,7 +22,7 @@ const startServer = async () => {
   const authRoutes = require("./routes/auth.routes");
 
   app.use(cors({
-    origin: "https://m4lfs77x-5173.use2.devtunnels.ms",
+    origin: "http://localhost:5173",
     credentials: true,
   }));
 

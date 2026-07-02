@@ -22,12 +22,12 @@ Exceeding a limit returns `429 Too Many Requests`:
 
 StepWise supports two modes:
 
-- **Guest** — no account needed. A temporary session is tracked via an httpOnly cookie (`guestSessionId`), and explanations are stored in Redis for 24 hours.
-- **Registered user** — sign up with username, email, and password. A JWT is issued in an httpOnly cookie (`token`), and explanations are stored permanently in MongoDB, scoped to that user.
+- **Guest** - no account needed. A temporary session is tracked via an httpOnly cookie (`guestSessionId`), and explanations are stored in Redis for 24 hours.
+- **Registered user** - sign up with username, email, and password. A JWT is issued in an httpOnly cookie (`token`), and explanations are stored permanently in MongoDB, scoped to that user.
 
-Auth state is detected automatically per request — no special header needed. The same endpoints behave differently depending on whether a valid `token` cookie is present.
+Auth state is detected automatically per request - no special header needed. The same endpoints behave differently depending on whether a valid `token` cookie is present.
 
-> **Note:** The `/explain` endpoint currently allows guest access. It can be restricted to registered users only by switching the auth middleware from optional to required — useful for production deployments where Claude API costs need to be controlled.
+> **Note:** The `/explain` endpoint currently allows guest access. It can be restricted to registered users only by switching the auth middleware from optional to required - useful for production deployments where Claude API costs need to be controlled.
 
 ---
 
@@ -46,7 +46,7 @@ Auth state is detected automatically per request — no special header needed. T
 }
 ```
 
-**Success Response — 200:**
+**Success Response - 200:**
 ```json
 {
   "success": true,
@@ -82,7 +82,7 @@ Sets an httpOnly `token` cookie (7 day expiry). If a `guestSessionId` cookie is 
 }
 ```
 
-**Success Response — 200:**
+**Success Response - 200:**
 ```json
 {
   "success": true,
@@ -110,7 +110,7 @@ Sets an httpOnly `token` cookie (7 day expiry).
 
 **POST** `/api/v1/auth/logout`
 
-**Success Response — 200:**
+**Success Response - 200:**
 ```json
 { "success": true, "message": "Logged out successfully" }
 ```
@@ -125,7 +125,7 @@ Clears the `token` cookie.
 
 Requires a valid `token` cookie.
 
-**Success Response — 200:**
+**Success Response - 200:**
 ```json
 {
   "success": true,
@@ -158,7 +158,7 @@ Sends a problem to Claude and returns a structured, step-by-step explanation. Sa
 }
 ```
 
-**Success Response — 200:**
+**Success Response - 200:**
 ```json
 {
   "success": true,
@@ -172,9 +172,9 @@ Sends a problem to Claude and returns a structured, step-by-step explanation. Sa
       { "title": "Why a Hash Map", "content": "..." }
     ],
     "trace": [
-      { "step": "i = 0", "detail": "value 2, complement 7 — map is empty. Store {2: 0}." }
+      { "step": "i = 0", "detail": "value 2, complement 7 - map is empty. Store {2: 0}." }
     ],
-    "traceNote": "Found in a single pass — no backtracking.",
+    "traceNote": "Found in a single pass - no backtracking.",
     "pitfalls": [
       "Reusing the same element.",
       "Storing values instead of indices."
@@ -203,11 +203,11 @@ Sends a problem to Claude and returns a structured, step-by-step explanation. Sa
 
 ### 2. Get All Past Explanations
 
-Returns explanation history — from MongoDB if logged in, from Redis if a guest. Newest first.
+Returns explanation history - from MongoDB if logged in, from Redis if a guest. Newest first.
 
 **GET** `/api/v1/explanations`
 
-**Success Response — 200:**
+**Success Response - 200:**
 ```json
 {
   "success": true,
@@ -239,11 +239,11 @@ Returns explanation history — from MongoDB if logged in, from Redis if a guest
 
 ### 3. Get Single Explanation by ID
 
-Returns one explanation by its MongoDB ID. **MongoDB only** — guest entries are not fetchable by ID since the frontend already has the full object client-side when displaying a guest history item.
+Returns one explanation by its MongoDB ID. **MongoDB only** - guest entries are not fetchable by ID since the frontend already has the full object client-side when displaying a guest history item.
 
 **GET** `/api/v1/explanations/:id`
 
-**Success Response — 200:**
+**Success Response - 200:**
 ```json
 {
   "success": true,

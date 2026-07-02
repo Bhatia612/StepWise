@@ -11,7 +11,7 @@ cp .env.example .env
 | Variable | Description | Example |
 |---|---|---|
 | `PORT` | Port the Express server runs on | `5000` |
-| `NODE_ENV` | Environment mode — affects cookie security settings | `development` |
+| `NODE_ENV` | Environment mode - affects cookie security settings | `development` |
 | `MONGO_URI` | MongoDB connection string from Atlas | `mongodb+srv://...` |
 | `ANTHROPIC_API_KEY` | Claude API key from console.anthropic.com | `sk-ant-...` |
 | `JWT_SECRET` | Random secret used to sign auth tokens | generate with the command below |

@@ -1,8 +1,8 @@
 # StepWise 🧠
 
-A full-stack web app that helps junior developers understand DSA problems step-by-step — without jumping straight to code.
+A full-stack web app that helps junior developers and students understand DSA problems step-by-step — without jumping straight to code.
 
-StepWise acts as a **thinking coach**: given a LeetCode-style problem, it breaks down the pattern, intuition, a worked trace, common pitfalls, and time/space complexity in plain English before showing any solution.
+StepWise acts as a **thinking coach**: given a LeetCode-style problem, it breaks down the pattern, intuition, a worked trace, common pitfalls, and time/space complexity in plain English — tailored to the specific problem, not a fixed template.
 
 ---
 
@@ -18,7 +18,7 @@ StepWise fixes that by teaching the thought process, not just the answer.
 
 | Layer | Technology |
 |---|---|
-| Frontend | React (Vite), SCSS |
+| Frontend | React 19 (Vite), SCSS |
 | Backend | Node.js + Express |
 | Database | MongoDB (Mongoose) — permanent storage for registered users |
 | Cache / Sessions | Redis — guest sessions (24h auto-expiry) and rate limiting |
@@ -29,63 +29,52 @@ StepWise fixes that by teaching the thought process, not just the answer.
 
 ## Key Features
 
-- **Structured explanations** — pattern, difficulty, adaptable sections, a worked-example trace, common pitfalls, and complexity with reasoning — tailored per problem, not a fixed template
-- **Guest mode** — use the app without an account; history is kept in Redis for 24 hours
-- **Accounts** — sign up to keep explanation history permanently
-- **Guest-to-account migration** — signing up automatically moves your guest history into your new account
-- **Rate limiting** — Redis-backed, protects the Claude API from abuse
+- **Adaptive explanations** — pattern, difficulty, tailored sections, a worked trace, common pitfalls, and complexity with reasoning — Claude decides the structure based on the specific problem, not a fixed template
+- **Guest mode** — use the app without an account; history is kept in Redis for 24 hours then auto-deleted
+- **Accounts** — sign up to keep explanation history permanently in MongoDB
+- **Guest-to-account migration** — signing up automatically moves your guest history into your new account, silently, at the moment of signup
+- **Auth-protected explain** — only registered users can call the Claude API, protecting against abuse
+- **Redis-backed rate limiting** — 5 requests per minute on the explain endpoint, 100 per minute elsewhere
+- **Loading skeleton** — pulsing placeholder while Claude is generating a response
+- **Empty state with examples** — clickable example problems on first load so there's no blank-page anxiety
+- **Fully responsive** — works on mobile and desktop
 
 ---
 
 ## Folder Structure
 
 ### Backend (`backend/`)
+
+```
 src/
-
 ├── config/         # MongoDB and Redis connections
-
 ├── controllers/    # Business logic per route
-
-├── middlewares/    # Auth, validation, rate limiting, error handling
-
+├── middlewares/    # Auth (protect + optional), validation, rate limiting, error handling, guest session
 ├── models/         # Mongoose schemas (User, Explanation)
-
 ├── routes/         # URL → controller mappings
-
-├── utils/          # Small reusable helpers (e.g. guest migration)
-
+├── utils/          # migrateGuestHistory helper
 └── server.js       # Entry point
+```
 
 ### Frontend (`frontend/`)
+
+```
 src/
-
 ├── features/
-
 │   └── explainer/
-
 │       ├── pages/        # ExplainerPage
-
-│       ├── components/   # ProblemInput, ExplanationCard, HistoryList, HistoryToggle
-
+│       ├── components/   # ProblemInput, ExplanationCard, ExplanationSkeleton, HistoryList, HistoryToggle, EmptyState
 │       ├── hooks/        # useExplain, useHistory
-
 │       ├── services/     # explainerService
-
 │       └── styles/
-
 ├── shared/
-
-│   ├── components/  # Navbar, AuthModal
-
-│   ├── context/     # AuthContext
-
-│   ├── services/    # api.js, authService.js
-
-│   ├── styles/      # design tokens, global styles
-
-│   └── utils/       # formatRelativeTime, groupByPattern
-
+│   ├── components/       # Navbar, AuthModal
+│   ├── context/          # AuthContext
+│   ├── services/         # api.js, authService.js
+│   ├── styles/           # _tokens.scss, _global.scss
+│   └── utils/            # formatRelativeTime, groupByPattern
 └── main.jsx
+```
 
 ---
 
@@ -125,10 +114,6 @@ System design overview → see [`ARCHITECTURE.md`](./ARCHITECTURE.md)
 ## Environment Variables
 
 Full guide → see [`ENVIRONMENT.md`](./ENVIRONMENT.md)
-
-## Changelog
-
-Full log → see [`CHANGELOG.md`](./CHANGELOG.md)
 
 ---
 

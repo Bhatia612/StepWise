@@ -27,6 +27,8 @@ StepWise supports two modes:
 
 Auth state is detected automatically per request — no special header needed. The same endpoints behave differently depending on whether a valid `token` cookie is present.
 
+> **Note:** The `/explain` endpoint currently allows guest access. It can be restricted to registered users only by switching the auth middleware from optional to required — useful for production deployments where Claude API costs need to be controlled.
+
 ---
 
 ## Auth Endpoints
@@ -52,11 +54,12 @@ Auth state is detected automatically per request — no special header needed. T
     "id": "64abc...",
     "username": "mohitk",
     "email": "mohit@stepwise.dev"
-  }
+  },
+  "migratedExplanations": 2
 }
 ```
 
-Sets an httpOnly `token` cookie (7 day expiry).
+Sets an httpOnly `token` cookie (7 day expiry). If a `guestSessionId` cookie is present, any existing guest history is automatically migrated into the new account.
 
 **Error Responses:**
 
@@ -144,6 +147,8 @@ Requires a valid `token` cookie.
 
 Sends a problem to Claude and returns a structured, step-by-step explanation. Saved to MongoDB if logged in, or Redis (24h expiry) if a guest.
 
+> Guest access is currently enabled. To restrict to registered users only, swap the optional auth middleware for `protect`. In that case, a missing or invalid token returns `401`.
+
 **POST** `/api/v1/explain`
 
 **Request Body:**
@@ -190,6 +195,7 @@ Sends a problem to Claude and returns a structured, step-by-step explanation. Sa
 | Status | Meaning |
 |---|---|
 | `400` | Missing or empty problem in request body |
+| `401` | Not authenticated (only if restrict mode is enabled) |
 | `429` | Rate limit exceeded |
 | `500` | Claude API failed or server error |
 
@@ -233,7 +239,7 @@ Returns explanation history — from MongoDB if logged in, from Redis if a guest
 
 ### 3. Get Single Explanation by ID
 
-Returns one explanation by its MongoDB ID. **MongoDB only** — guest entries (Redis) are not fetchable by this endpoint, since the frontend already has the full object client-side when displaying a guest history item.
+Returns one explanation by its MongoDB ID. **MongoDB only** — guest entries are not fetchable by ID since the frontend already has the full object client-side when displaying a guest history item.
 
 **GET** `/api/v1/explanations/:id`
 

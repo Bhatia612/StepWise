@@ -1,13 +1,18 @@
-import { useState, useRef } from "react";
+import { useRef, useEffect } from "react";
 import "../styles/ProblemInput.scss";
 
-const ProblemInput = ({ onSubmit, loading }) => {
-  const [problem, setProblem] = useState("");
+const ProblemInput = ({ onSubmit, loading, value, onChange }) => {
   const textareaRef = useRef(null);
 
-  const handleChange = (e) => {
-    setProblem(e.target.value);
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [value]);
 
+  const handleChange = (e) => {
+    onChange(e.target.value);
     const textarea = textareaRef.current;
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
@@ -15,15 +20,15 @@ const ProblemInput = ({ onSubmit, loading }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!problem || !problem.trim()) return;
-    onSubmit(problem);
+    if (!value || !value.trim()) return;
+    onSubmit(value);
   };
 
   return (
     <form className="problem-input" onSubmit={handleSubmit}>
       <textarea
         ref={textareaRef}
-        value={problem}
+        value={value}
         onChange={handleChange}
         placeholder="Paste your DSA problem here..."
         rows={1}

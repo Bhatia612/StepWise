@@ -16,18 +16,35 @@ const ExplainerPage = () => {
   const { history, loading: historyLoading, error: historyError, fetchHistory } = useHistory();
   const [showingHistory, setShowingHistory] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [problem, setProblem] = useState("");
+  const [transitioning, setTransitioning] = useState(false);
 
   useEffect(() => {
-    setShowingHistory(false);
-    setSelected(null);
-    reset();
+    setTransitioning(true);
+
+    const timer = setTimeout(() => {
+      setShowingHistory(false);
+      setSelected(null);
+      setProblem("");
+      reset();
+      setTransitioning(false);
+    }, 600);
+
+    return () => clearTimeout(timer);
   }, [user]);
 
-  const handleExplainSubmit = (problem) => {
+
+  const submitProblem = (problemText) => {
     setShowingHistory(false);
     setSelected(null);
-    explain(problem);
+    explain(problemText);
   };
+
+  const handleExampleClick = (problemText) => {
+    setProblem(problemText);
+    submitProblem(problemText);
+  };
+
 
   const handleToggle = () => {
     if (!showingHistory) fetchHistory();
@@ -48,6 +65,18 @@ const ExplainerPage = () => {
   const displayedExplanation = selected || data;
   const showEmptyState = !displayedExplanation && !loading && !showingHistory;
 
+  if (transitioning) {
+    return (
+      <div className="explainer-page">
+        <div className="explainer-page__hero">
+          <h1 className="explainer-page__title">StepWise</h1>
+          <p className="explainer-page__tagline">Understand the problem before you write the code.</p>
+        </div>
+        <ExplanationSkeleton />
+      </div>
+    );
+  }
+
   return (
     <div className="explainer-page">
       <div className="explainer-page__hero">
@@ -55,7 +84,12 @@ const ExplainerPage = () => {
         <p className="explainer-page__tagline">Understand the problem before you write the code.</p>
       </div>
 
-      <ProblemInput onSubmit={handleExplainSubmit} loading={loading} />
+      <ProblemInput
+        onSubmit={submitProblem}
+        loading={loading}
+        value={problem}
+        onChange={setProblem}
+      />
 
       {selected ? (
         <button className="explainer-page__back" onClick={handleBack}>
@@ -79,7 +113,7 @@ const ExplainerPage = () => {
       ) : loading ? (
         <ExplanationSkeleton />
       ) : showEmptyState ? (
-        <EmptyState onSelect={handleExplainSubmit} />
+        <EmptyState onSelect={handleExampleClick} />
       ) : (
         <ExplanationCard explanation={displayedExplanation} />
       )}

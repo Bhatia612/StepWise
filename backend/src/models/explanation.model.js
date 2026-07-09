@@ -54,10 +54,10 @@ const explanationSchema = new mongoose.Schema(
       default: [],
     },
     complexity: {
-      time: { type: String, required: true },
-      timeReason: { type: String, required: true },
-      space: { type: String, required: true },
-      spaceReason: { type: String, required: true },
+      time: { type: String, default: "" },
+      timeReason: { type: String, default: "" },
+      space: { type: String, default: "" },
+      spaceReason: { type: String, default: "" },
     },
     tags: {
       type: [String],

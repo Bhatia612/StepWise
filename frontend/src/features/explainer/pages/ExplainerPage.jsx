@@ -4,20 +4,22 @@ import useExplain from "../hooks/useExplain";
 import useHistory from "../hooks/useHistory";
 import ProblemInput from "../components/ProblemInput";
 import ExplanationCard from "../components/ExplanationCard";
+import ExplanationSkeleton from "../components/ExplanationSkeleton";
 import HistoryToggle from "../components/HistoryToggle";
 import HistoryList from "../components/HistoryList";
 import EmptyState from "../components/EmptyState";
-import ExplanationSkeleton from "../components/ExplanationSkeleton";
 import "../styles/ExplainerPage.scss";
+import StreamingDisplay from "../components/StreamingDisplay";
 
 const ExplainerPage = () => {
   const { user } = useAuth();
-  const { data, loading, error, explain, reset } = useExplain();
+  const { data, streamData, loading, error, explain, reset } = useExplain();
   const { history, loading: historyLoading, error: historyError, fetchHistory } = useHistory();
   const [showingHistory, setShowingHistory] = useState(false);
   const [selected, setSelected] = useState(null);
   const [problem, setProblem] = useState("");
   const [transitioning, setTransitioning] = useState(false);
+  const [fromExample, setFromExample] = useState(false);
 
   useEffect(() => {
     setTransitioning(true);
@@ -26,6 +28,7 @@ const ExplainerPage = () => {
       setShowingHistory(false);
       setSelected(null);
       setProblem("");
+      setFromExample(false);
       reset();
       setTransitioning(false);
     }, 600);
@@ -33,18 +36,26 @@ const ExplainerPage = () => {
     return () => clearTimeout(timer);
   }, [user]);
 
-
   const submitProblem = (problemText) => {
     setShowingHistory(false);
     setSelected(null);
+    setFromExample(false);
     explain(problemText);
   };
 
   const handleExampleClick = (problemText) => {
     setProblem(problemText);
-    submitProblem(problemText);
+    setFromExample(true);
+    setShowingHistory(false);
+    setSelected(null);
+    explain(problemText);
   };
 
+  const handleBackToExamples = () => {
+    setFromExample(false);
+    setProblem("");
+    reset();
+  };
 
   const handleToggle = () => {
     if (!showingHistory) fetchHistory();
@@ -95,6 +106,10 @@ const ExplainerPage = () => {
         <button className="explainer-page__back" onClick={handleBack}>
           ‹ Back to history
         </button>
+      ) : fromExample && data ? (
+        <button className="explainer-page__back" onClick={handleBackToExamples}>
+          ‹ Back to examples
+        </button>
       ) : (
         <div className="explainer-page__toggle-row">
           <HistoryToggle showingHistory={showingHistory} onToggle={handleToggle} />
@@ -111,7 +126,7 @@ const ExplainerPage = () => {
           onSelect={handleSelect}
         />
       ) : loading ? (
-        <ExplanationSkeleton />
+        <ExplanationCard explanation={streamData} streaming={true} />
       ) : showEmptyState ? (
         <EmptyState onSelect={handleExampleClick} />
       ) : (

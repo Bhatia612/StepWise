@@ -1,11 +1,12 @@
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 
-export const explainProblemStream = (problem, onEvent, onDone, onError) => {
+export const explainProblemStream = (problem, signal, onEvent, onDone, onError) => {
   fetch(`${API_BASE}/explain`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({ problem }),
+    signal,
   })
     .then((response) => {
       if (!response.ok) {
@@ -16,6 +17,7 @@ export const explainProblemStream = (problem, onEvent, onDone, onError) => {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
+      let isDone = false;
 
       const read = () => {
         reader.read().then(({ done, value }) => {
@@ -33,9 +35,10 @@ export const explainProblemStream = (problem, onEvent, onDone, onError) => {
             } else if (line.startsWith("data:")) {
               try {
                 const data = JSON.parse(line.replace("data:", "").trim());
-                if (currentEvent === "done") {
+                if (currentEvent === "done" && !isDone) {
+                  isDone = true;
                   onDone(data.data);
-                } else if (currentEvent) {
+                } else if (currentEvent && !isDone) {
                   onEvent(currentEvent, data);
                 }
               } catch {
@@ -46,12 +49,18 @@ export const explainProblemStream = (problem, onEvent, onDone, onError) => {
           }
 
           read();
+        }).catch((err) => {
+          if (err?.name === "AbortError") return;
+          onError(err);
         });
       };
 
       read();
     })
-    .catch(onError);
+    .catch((err) => {
+      if (err?.name === "AbortError") return;
+      onError(err);
+    });
 };
 
 export const getAllExplanations = async () => {

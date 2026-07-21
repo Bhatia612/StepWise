@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { explainProblemStream } from "../services/explainerService";
 
 const useExplain = () => {
@@ -6,8 +6,15 @@ const useExplain = () => {
   const [streamData, setStreamData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const abortControllerRef = useRef(null);
 
   const explain = (problem) => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    abortControllerRef.current = new AbortController();
+
     setLoading(true);
     setError(null);
     setStreamData(null);
@@ -15,10 +22,10 @@ const useExplain = () => {
 
     explainProblemStream(
       problem,
+      abortControllerRef.current.signal,
       (event, payload) => {
         setStreamData((prev) => {
           const current = prev || {};
-
           if (event === "meta") {
             return { ...current, pattern: payload.pattern, difficulty: payload.difficulty };
           }
@@ -46,6 +53,7 @@ const useExplain = () => {
         setLoading(false);
       },
       (err) => {
+        if (err?.name === "AbortError") return;
         if (err?.status === 401) {
           setError("Please sign in to explain a problem.");
         } else {
@@ -57,6 +65,9 @@ const useExplain = () => {
   };
 
   const reset = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
     setData(null);
     setStreamData(null);
     setError(null);

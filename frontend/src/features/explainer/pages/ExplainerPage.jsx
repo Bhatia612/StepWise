@@ -8,11 +8,14 @@ import ExplanationSkeleton from "../components/ExplanationSkeleton";
 import HistoryToggle from "../components/HistoryToggle";
 import HistoryList from "../components/HistoryList";
 import EmptyState from "../components/EmptyState";
+import GuestNudgeModal from "../../../shared/components/GuestNudgeModal";
+import AuthModal from "../../../shared/components/AuthModal";
 import "../styles/ExplainerPage.scss";
-import StreamingDisplay from "../components/StreamingDisplay";
+
+const GUEST_EXPLAIN_KEY = "sw_guest_explains";
 
 const ExplainerPage = () => {
-  const { user } = useAuth();
+  const { user, updateGuestCredits } = useAuth();
   const { data, streamData, loading, error, explain, reset } = useExplain();
   const { history, loading: historyLoading, error: historyError, fetchHistory } = useHistory();
   const [showingHistory, setShowingHistory] = useState(false);
@@ -20,6 +23,9 @@ const ExplainerPage = () => {
   const [problem, setProblem] = useState("");
   const [transitioning, setTransitioning] = useState(false);
   const [fromExample, setFromExample] = useState(false);
+  const [showNudge, setShowNudge] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [hardBlock, setHardBlock] = useState(false);
 
   useEffect(() => {
     setTransitioning(true);
@@ -29,14 +35,41 @@ const ExplainerPage = () => {
       setSelected(null);
       setProblem("");
       setFromExample(false);
+      setShowNudge(false);
       reset();
       setTransitioning(false);
     }, 600);
 
     return () => clearTimeout(timer);
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user) {
+      const count = parseInt(localStorage.getItem(GUEST_EXPLAIN_KEY) || "0");
+      updateGuestCredits(Math.max(0, 3 - count));
+    }
   }, [user]);
 
+  useEffect(() => {
+    if (!user && data) {
+      const count = parseInt(localStorage.getItem(GUEST_EXPLAIN_KEY) || "0") + 1;
+      localStorage.setItem(GUEST_EXPLAIN_KEY, count);
+      const remaining = Math.max(0, 3 - count);
+      updateGuestCredits(remaining);
+
+      if (count === 1) {
+        setShowNudge(true);
+      }
+    }
+  }, [data]);
+
   const submitProblem = (problemText) => {
+    const count = parseInt(localStorage.getItem(GUEST_EXPLAIN_KEY) || "0");
+    if (!user && count >= 3) {
+      setHardBlock(true);
+      setShowNudge(true);
+      return;
+    }
     setShowingHistory(false);
     setSelected(null);
     setFromExample(false);
@@ -44,6 +77,12 @@ const ExplainerPage = () => {
   };
 
   const handleExampleClick = (problemText) => {
+    const count = parseInt(localStorage.getItem(GUEST_EXPLAIN_KEY) || "0");
+    if (!user && count >= 3) {
+      setHardBlock(true);
+      setShowNudge(true);
+      return;
+    }
     setProblem(problemText);
     setFromExample(true);
     setShowingHistory(false);
@@ -131,6 +170,25 @@ const ExplainerPage = () => {
         <EmptyState onSelect={handleExampleClick} />
       ) : (
         <ExplanationCard explanation={displayedExplanation} />
+      )}
+
+      {showNudge && (
+        <GuestNudgeModal
+          onClose={() => {
+            setShowNudge(false);
+            setHardBlock(false);
+          }}
+          onSignUp={() => {
+            setShowNudge(false);
+            setHardBlock(false);
+            setShowAuthModal(true);
+          }}
+          hardBlock={hardBlock}
+        />
+      )}
+
+      {showAuthModal && (
+        <AuthModal onClose={() => setShowAuthModal(false)} />
       )}
     </div>
   );

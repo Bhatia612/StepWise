@@ -45,6 +45,15 @@
     }
   }
 
+  &__credits {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-ink);
+    background: var(--accent);
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-pill);
+  }
+
   &__guest-credits {
     font-size: 0.85rem;
     font-weight: 500;

@@ -10,7 +10,11 @@ export const explainProblemStream = (problem, signal, onEvent, onDone, onError) 
   })
     .then((response) => {
       if (!response.ok) {
-        onError({ status: response.status });
+        response.json().then((data) => {
+          onError({ status: response.status, code: data.code, message: data.message });
+        }).catch(() => {
+          onError({ status: response.status });
+        });
         return;
       }
 
@@ -37,7 +41,7 @@ export const explainProblemStream = (problem, signal, onEvent, onDone, onError) 
                 const data = JSON.parse(line.replace("data:", "").trim());
                 if (currentEvent === "done" && !isDone) {
                   isDone = true;
-                  onDone(data.data);
+                  onDone(data.data, data.creditsRemaining);
                 } else if (currentEvent && !isDone) {
                   onEvent(currentEvent, data);
                 }

@@ -1,7 +1,9 @@
 import { useState, useRef } from "react";
+import { useAuth } from "../../../shared/context/AuthContext";
 import { explainProblemStream } from "../services/explainerService";
 
 const useExplain = () => {
+  const { updateCredits } = useAuth();
   const [data, setData] = useState(null);
   const [streamData, setStreamData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -47,15 +49,20 @@ const useExplain = () => {
           return current;
         });
       },
-      (finalData) => {
+      (finalData, creditsRemaining) => {
         setData(finalData);
         setStreamData(null);
+        if (creditsRemaining !== undefined) {
+          updateCredits(creditsRemaining);
+        }
         setLoading(false);
       },
       (err) => {
         if (err?.name === "AbortError") return;
         if (err?.status === 401) {
           setError("Please sign in to explain a problem.");
+        } else if (err?.code === "NO_CREDITS") {
+          setError("NO_CREDITS");
         } else {
           setError("Something went wrong. Please try again.");
         }

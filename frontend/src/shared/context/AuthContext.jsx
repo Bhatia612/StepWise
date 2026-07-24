@@ -33,12 +33,24 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateCredits = (newCount) => {
+    setUser((prev) => ({ ...prev, credits: newCount }));
+  };
+
   const updateGuestCredits = (count) => {
     setGuestCredits(count);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, guestCredits, updateGuestCredits }}>
+    <AuthContext.Provider value={{
+      user,
+      loading,
+      login,
+      logout,
+      updateCredits,
+      guestCredits,
+      updateGuestCredits,
+    }}>
       {children}
     </AuthContext.Provider>
   );

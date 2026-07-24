@@ -14,6 +14,11 @@ const Navbar = () => {
         <div className="navbar__links">
           {user ? (
             <>
+              {user.credits !== undefined && (
+                <span className="navbar__credits">
+                  ⚡ {user.credits} credits
+                </span>
+              )}
               <span className="navbar__username">{user.username}</span>
               <button className="navbar__link navbar__link--accent" onClick={logout}>
                 Log out

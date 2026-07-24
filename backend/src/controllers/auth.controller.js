@@ -30,11 +30,7 @@ const signUpController = async (req, res, next) => {
             });
         }
 
-        const user = await User.create({
-            username,
-            email,
-            password
-        })
+        const user = await User.create({ username, email, password })
 
         const guestSessionId = req.cookies.guestSessionId
         const migratedCount = await migrateGuestHistory(guestSessionId, user._id)
@@ -52,6 +48,7 @@ const signUpController = async (req, res, next) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
+                credits: user.credits,
             },
             migratedExplanations: migratedCount
         })
@@ -93,6 +90,7 @@ const logInController = async (req, res, next) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
+                credits: user.credits,
             },
         });
 
@@ -101,13 +99,16 @@ const logInController = async (req, res, next) => {
     }
 }
 
-const getMeController = (req, res) => {
+const getMeController = async (req, res) => {
+    const user = await User.findById(req.user._id).select("username email credits");
+
     res.status(200).json({
         success: true,
         data: {
-            id: req.user._id,
-            username: req.user.username,
-            email: req.user.email,
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            credits: user.credits,
         }
     })
 }

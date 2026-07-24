@@ -1,6 +1,7 @@
 const Anthropic = require("@anthropic-ai/sdk");
 const Explanation = require("../models/explanation.model");
 const { redisClient } = require("../config/redis");
+const User = require("../models/user.model");
 
 const client = new Anthropic.Anthropic();
 
@@ -18,7 +19,6 @@ const explainProblem = async (req, res, next) => {
     };
 
     let buffer = "";
-    let fullText = "";
     const parsed = {};
 
     const stream = await client.messages.stream({
@@ -61,7 +61,6 @@ Problem: ${problem}`,
         chunk.delta.type === "text_delta"
       ) {
         const text = chunk.delta.text;
-        fullText += text;
         buffer += text;
 
         const lines = buffer.split("\n");
@@ -103,13 +102,8 @@ Problem: ${problem}`,
                 spaceReason: obj.spaceReason,
               });
             }
-          } catch (error) {
-            if (!res.headersSent) {
-              next(error);
-            } else {
-              sendEvent("error", { message: error.message || "Something went wrong" });
-              res.end();
-            }
+          } catch {
+            // incomplete line, skip
           }
         }
       }
@@ -123,8 +117,6 @@ Problem: ${problem}`,
         spaceReason: "Claude did not return complexity analysis",
       };
     }
-
-    console.log("PARSED RESULT:", JSON.stringify(parsed, null, 2));
 
     const explanationData = {
       problem,
@@ -143,22 +135,43 @@ Problem: ${problem}`,
         ...explanationData,
         userId: req.user._id,
       });
-      sendEvent("done", { data: saved });
+
+      const updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        { $inc: { credits: -1 } },
+        { new: true }
+      );
+
+      sendEvent("done", {
+        data: saved,
+        creditsRemaining: updatedUser.credits,
+      });
     } else {
       const redisKey = `guest:${req.guestSessionId}`;
       const existing = await redisClient.get(redisKey);
       const history = existing ? JSON.parse(existing) : [];
+
       const entryWithId = { _id: `guest-${Date.now()}`, ...explanationData };
       history.unshift(entryWithId);
+
       await redisClient.set(redisKey, JSON.stringify(history), {
         EX: 24 * 60 * 60,
       });
+
       sendEvent("done", { data: entryWithId });
     }
 
     res.end();
   } catch (error) {
-    next(error);
+    if (!res.headersSent) {
+      next(error);
+    } else {
+      const sendEvent = (event, data) => {
+        res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+      };
+      sendEvent("error", { message: error.message || "Something went wrong" });
+      res.end();
+    }
   }
 };
 

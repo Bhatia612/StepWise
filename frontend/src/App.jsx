@@ -65,6 +65,12 @@ const AppContent = () => {
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
+      {sidebarOpen && (
+        <div
+          className="app-layout__overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
       <div className="app-layout__main">
         <Navbar
           onToggleSidebar={() => setSidebarOpen((prev) => !prev)}

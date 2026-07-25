@@ -10,6 +10,7 @@ import HistoryList from "../components/HistoryList";
 import EmptyState from "../components/EmptyState";
 import GuestNudgeModal from "../../../shared/components/GuestNudgeModal";
 import AuthModal from "../../../shared/components/AuthModal";
+import PricingModal from "../../../shared/components/PricingModal";
 import "../styles/ExplainerPage.scss";
 
 const GUEST_EXPLAIN_KEY = "sw_guest_explains";
@@ -24,22 +25,29 @@ const ExplainerPage = () => {
   const [transitioning, setTransitioning] = useState(false);
   const [fromExample, setFromExample] = useState(false);
   const [showNudge, setShowNudge] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const [hardBlock, setHardBlock] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
+
+  useEffect(() => {
+    if (error === "NO_CREDITS") {
+      setShowPaywall(true);
+      reset();
+    }
+  }, [error]);
 
   useEffect(() => {
     setTransitioning(true);
-
     const timer = setTimeout(() => {
       setShowingHistory(false);
       setSelected(null);
       setProblem("");
       setFromExample(false);
       setShowNudge(false);
+      setHardBlock(false);
       reset();
       setTransitioning(false);
     }, 600);
-
     return () => clearTimeout(timer);
   }, [user?.id]);
 
@@ -54,8 +62,7 @@ const ExplainerPage = () => {
     if (!user && data) {
       const count = parseInt(localStorage.getItem(GUEST_EXPLAIN_KEY) || "0") + 1;
       localStorage.setItem(GUEST_EXPLAIN_KEY, count);
-      const remaining = Math.max(0, 3 - count);
-      updateGuestCredits(remaining);
+      updateGuestCredits(Math.max(0, 3 - count));
 
       if (count === 1) {
         setShowNudge(true);
@@ -155,7 +162,9 @@ const ExplainerPage = () => {
         </div>
       )}
 
-      {error && <p className="explainer-page__error">{error}</p>}
+      {error && error !== "NO_CREDITS" && (
+        <p className="explainer-page__error">{error}</p>
+      )}
 
       {showingHistory ? (
         <HistoryList
@@ -189,6 +198,13 @@ const ExplainerPage = () => {
 
       {showAuthModal && (
         <AuthModal onClose={() => setShowAuthModal(false)} />
+      )}
+
+      {showPaywall && (
+        <PricingModal
+          onClose={() => setShowPaywall(false)}
+          outOfCredits={true}
+        />
       )}
     </div>
   );

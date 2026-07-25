@@ -29,6 +29,7 @@
     "mongoose": "^9.7.0",
     "rate-limit-redis": "^5.0.0",
     "redis": "^6.0.0",
+    "stripe": "^22.3.2",
     "uuid": "^14.0.1"
   },
   "devDependencies": {

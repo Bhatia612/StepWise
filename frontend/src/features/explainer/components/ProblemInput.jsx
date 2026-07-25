@@ -18,6 +18,15 @@ const ProblemInput = ({ onSubmit, loading, value, onChange }) => {
     textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
+  const handleKeyDown = (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      e.preventDefault();
+      if (value && value.trim() && !loading) {
+        onSubmit(value);
+      }
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!value || !value.trim()) return;
@@ -30,10 +39,12 @@ const ProblemInput = ({ onSubmit, loading, value, onChange }) => {
         ref={textareaRef}
         value={value}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         placeholder="Paste your DSA problem here..."
         rows={1}
       />
       <div className="problem-input__footer">
+        <span className="problem-input__hint">ctrl + Enter to submit</span>
         <button className="problem-input__button" type="submit" disabled={loading}>
           {loading ? "Thinking..." : "Explain"}
         </button>

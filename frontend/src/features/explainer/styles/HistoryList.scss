@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-weight: 600;
     color: var(--muted);
     text-transform: uppercase;
@@ -17,6 +17,7 @@
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--border);
     margin-bottom: 0.5rem;
+    padding-left: .5rem;
   }
 
   &__group-count {
@@ -36,7 +37,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 0.85rem 1.1rem;
+    padding: 0.5rem 1.1rem;
     margin-bottom: 0.5rem;
     transition: border-color 0.15s ease, margin-left 0.15s ease;
 
@@ -60,12 +61,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  &__time {
-    font-size: 0.8rem;
-    color: var(--muted);
-    flex-shrink: 0;
   }
 
   &__chevron {

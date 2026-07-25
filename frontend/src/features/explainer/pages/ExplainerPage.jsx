@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../../shared/context/AuthContext";
 import useExplain from "../hooks/useExplain";
-import useHistory from "../hooks/useHistory";
 import ProblemInput from "../components/ProblemInput";
 import ExplanationCard from "../components/ExplanationCard";
 import ExplanationSkeleton from "../components/ExplanationSkeleton";
-import HistoryToggle from "../components/HistoryToggle";
-import HistoryList from "../components/HistoryList";
 import EmptyState from "../components/EmptyState";
 import GuestNudgeModal from "../../../shared/components/GuestNudgeModal";
 import AuthModal from "../../../shared/components/AuthModal";
@@ -15,19 +12,47 @@ import "../styles/ExplainerPage.scss";
 
 const GUEST_EXPLAIN_KEY = "sw_guest_explains";
 
-const ExplainerPage = () => {
+const WELCOME_LINES = [
+  "Hey! I'm StepWise, a DSA thinking coach.",
+  "Paste any LeetCode-style problem below and I'll break down the pattern, the intuition, a step-by-step trace, common pitfalls, and complexity reasoning.",
+  "I won't give you the solution. That's the point.",
+];
+
+const WelcomeMessage = () => {
+  const [lines, setLines] = useState([]);
+
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < WELCOME_LINES.length) {
+        setLines((prev) => [...prev, WELCOME_LINES[i]]);
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 600);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="chat__welcome">
+      {lines.map((line, index) => (
+        <p key={index} className="chat__welcome-line">{line}</p>
+      ))}
+    </div>
+  );
+};
+
+const ExplainerPage = ({ selectedHistory, onExplainComplete, onClearSelected }) => {
   const { user, updateGuestCredits } = useAuth();
   const { data, streamData, loading, error, explain, reset } = useExplain();
-  const { history, loading: historyLoading, error: historyError, fetchHistory } = useHistory();
-  const [showingHistory, setShowingHistory] = useState(false);
-  const [selected, setSelected] = useState(null);
   const [problem, setProblem] = useState("");
-  const [transitioning, setTransitioning] = useState(false);
-  const [fromExample, setFromExample] = useState(false);
+  const [submittedProblem, setSubmittedProblem] = useState(null);
   const [showNudge, setShowNudge] = useState(false);
   const [hardBlock, setHardBlock] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
+  const chatEndRef = useRef(null);
 
   useEffect(() => {
     if (error === "NO_CREDITS") {
@@ -35,21 +60,6 @@ const ExplainerPage = () => {
       reset();
     }
   }, [error]);
-
-  useEffect(() => {
-    setTransitioning(true);
-    const timer = setTimeout(() => {
-      setShowingHistory(false);
-      setSelected(null);
-      setProblem("");
-      setFromExample(false);
-      setShowNudge(false);
-      setHardBlock(false);
-      reset();
-      setTransitioning(false);
-    }, 600);
-    return () => clearTimeout(timer);
-  }, [user?.id]);
 
   useEffect(() => {
     if (!user) {
@@ -63,12 +73,16 @@ const ExplainerPage = () => {
       const count = parseInt(localStorage.getItem(GUEST_EXPLAIN_KEY) || "0") + 1;
       localStorage.setItem(GUEST_EXPLAIN_KEY, count);
       updateGuestCredits(Math.max(0, 3 - count));
-
-      if (count === 1) {
-        setShowNudge(true);
-      }
+      if (count === 1) setShowNudge(true);
+    }
+    if (data && onExplainComplete) {
+      onExplainComplete();
     }
   }, [data]);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [data, streamData, loading]);
 
   const submitProblem = (problemText) => {
     const count = parseInt(localStorage.getItem(GUEST_EXPLAIN_KEY) || "0");
@@ -77,9 +91,9 @@ const ExplainerPage = () => {
       setShowNudge(true);
       return;
     }
-    setShowingHistory(false);
-    setSelected(null);
-    setFromExample(false);
+    setSubmittedProblem(problemText);
+    setProblem("");
+    if (onClearSelected) onClearSelected();
     explain(problemText);
   };
 
@@ -91,121 +105,68 @@ const ExplainerPage = () => {
       return;
     }
     setProblem(problemText);
-    setFromExample(true);
-    setShowingHistory(false);
-    setSelected(null);
+    setSubmittedProblem(problemText);
+    if (onClearSelected) onClearSelected();
     explain(problemText);
   };
 
-  const handleBackToExamples = () => {
-    setFromExample(false);
-    setProblem("");
-    reset();
-  };
-
-  const handleToggle = () => {
-    if (!showingHistory) fetchHistory();
-    setShowingHistory(!showingHistory);
-    setSelected(null);
-  };
-
-  const handleSelect = (item) => {
-    setSelected(item);
-    setShowingHistory(false);
-  };
-
-  const handleBack = () => {
-    setSelected(null);
-    setShowingHistory(true);
-  };
-
-  const displayedExplanation = selected || data;
-  const showEmptyState = !displayedExplanation && !loading && !showingHistory;
-
-  if (transitioning) {
-    return (
-      <div className="explainer-page">
-        <div className="explainer-page__hero">
-          <h1 className="explainer-page__title">StepWise</h1>
-          <p className="explainer-page__tagline">Understand the problem before you write the code.</p>
-        </div>
-        <ExplanationSkeleton />
-      </div>
-    );
-  }
+  const displayedExplanation = selectedHistory || data;
+  const displayedProblem = selectedHistory?.problem || submittedProblem;
+  const showEmptyState = !displayedExplanation && !loading && !submittedProblem;
 
   return (
     <div className="explainer-page">
-      <div className="explainer-page__hero">
-        <h1 className="explainer-page__title">StepWise</h1>
-        <p className="explainer-page__tagline">Understand the problem before you write the code.</p>
+      <div className="chat">
+        <WelcomeMessage />
+
+        {showEmptyState && (
+          <EmptyState onSelect={handleExampleClick} />
+        )}
+
+        {displayedProblem && (
+          <div className="chat__user-bubble">
+            <p>{displayedProblem}</p>
+          </div>
+        )}
+
+        {loading && (
+          <div className="chat__response">
+            <ExplanationCard explanation={streamData} streaming={true} />
+          </div>
+        )}
+
+        {!loading && displayedExplanation && (
+          <div className="chat__response">
+            <ExplanationCard explanation={displayedExplanation} />
+          </div>
+        )}
+
+        {error && error !== "NO_CREDITS" && (
+          <p className="chat__error">{error}</p>
+        )}
+
+        <div ref={chatEndRef} />
       </div>
 
-      <ProblemInput
-        onSubmit={submitProblem}
-        loading={loading}
-        value={problem}
-        onChange={setProblem}
-      />
-
-      {selected ? (
-        <button className="explainer-page__back" onClick={handleBack}>
-          ‹ Back to history
-        </button>
-      ) : fromExample && data ? (
-        <button className="explainer-page__back" onClick={handleBackToExamples}>
-          ‹ Back to examples
-        </button>
-      ) : (
-        <div className="explainer-page__toggle-row">
-          <HistoryToggle showingHistory={showingHistory} onToggle={handleToggle} />
-        </div>
-      )}
-
-      {error && error !== "NO_CREDITS" && (
-        <p className="explainer-page__error">{error}</p>
-      )}
-
-      {showingHistory ? (
-        <HistoryList
-          history={history}
-          loading={historyLoading}
-          error={historyError}
-          onSelect={handleSelect}
+      <div className="explainer-page__input-bar">
+        <ProblemInput
+          onSubmit={submitProblem}
+          loading={loading}
+          value={problem}
+          onChange={setProblem}
         />
-      ) : loading ? (
-        <ExplanationCard explanation={streamData} streaming={true} />
-      ) : showEmptyState ? (
-        <EmptyState onSelect={handleExampleClick} />
-      ) : (
-        <ExplanationCard explanation={displayedExplanation} />
-      )}
+      </div>
 
       {showNudge && (
         <GuestNudgeModal
-          onClose={() => {
-            setShowNudge(false);
-            setHardBlock(false);
-          }}
-          onSignUp={() => {
-            setShowNudge(false);
-            setHardBlock(false);
-            setShowAuthModal(true);
-          }}
+          onClose={() => { setShowNudge(false); setHardBlock(false); }}
+          onSignUp={() => { setShowNudge(false); setHardBlock(false); setShowAuthModal(true); }}
           hardBlock={hardBlock}
         />
       )}
 
-      {showAuthModal && (
-        <AuthModal onClose={() => setShowAuthModal(false)} />
-      )}
-
-      {showPaywall && (
-        <PricingModal
-          onClose={() => setShowPaywall(false)}
-          outOfCredits={true}
-        />
-      )}
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
+      {showPaywall && <PricingModal onClose={() => setShowPaywall(false)} outOfCredits={true} />}
     </div>
   );
 };

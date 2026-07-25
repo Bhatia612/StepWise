@@ -1,7 +1,6 @@
 @keyframes shimmer {
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.5; }
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }
 
 @keyframes blink {
@@ -9,39 +8,53 @@
   50% { opacity: 0; }
 }
 
+@keyframes pulse {
+  0%, 100% { transform: scaleX(1); opacity: 0.5; }
+  50% { transform: scaleX(1.02); opacity: 1; }
+}
+
 .streaming-display {
-  margin-top: 3rem;
+  margin-top: 1rem;
 
   &__text {
     font-family: var(--font-body);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     color: var(--muted);
-    line-height: 1.7;
+    line-height: 1.75;
     white-space: pre-wrap;
     word-break: break-word;
 
     &::after {
       content: "▋";
       display: inline-block;
-      animation: blink 0.8s ease infinite;
+      animation: blink 0.9s ease infinite;
       color: var(--accent);
+      margin-left: 1px;
     }
   }
 
   &__skeleton {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    animation: shimmer 1.5s ease-in-out infinite;
+    gap: 0.6rem;
   }
 
   &__bar {
-    height: 16px;
+    height: 12px;
     background: var(--border);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-pill);
     width: 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+    transform-origin: left;
 
-    &--md { width: 75%; }
-    &--sm { width: 50%; }
+    &--md {
+      width: 68%;
+      animation-delay: 0.15s;
+    }
+
+    &--sm {
+      width: 42%;
+      animation-delay: 0.3s;
+    }
   }
 }

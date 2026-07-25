@@ -10,9 +10,7 @@ const EXAMPLE_PROBLEMS = [
 const EmptyState = ({ onSelect }) => {
   return (
     <div className="empty-state">
-      <p className="empty-state__prompt">
-        Paste any LeetCode-style problem above, or try one of these:
-      </p>
+      <p className="empty-state__prompt">Try an example</p>
       <div className="empty-state__examples">
         {EXAMPLE_PROBLEMS.map((problem, index) => (
           <button
@@ -20,7 +18,7 @@ const EmptyState = ({ onSelect }) => {
             className="empty-state__example"
             onClick={() => onSelect(problem)}
           >
-            {problem}
+            → {problem}
           </button>
         ))}
       </div>

@@ -1,59 +1,86 @@
 .problem-input {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 1.25rem;
+  padding: 1rem 1.25rem;
+  transition: border-color 0.15s ease;
+
+  &:focus-within {
+    border-color: var(--muted);
+  }
 
   textarea {
     width: 100%;
     outline: none;
     resize: none;
-    font-size: 1rem;
+    font-size: 0.925rem;
     color: var(--ink);
     background: transparent;
     overflow: hidden;
-    transition: height 0.1s ease;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+
+    // hide scrollbar
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     &::placeholder {
       color: var(--muted);
+      opacity: 0.6;
     }
   }
 
   &__footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 0.75rem;
+  }
+
+  &__hint {
+    font-size: 0.75rem;
+    color: var(--muted);
+    opacity: 0.5;
   }
 
   &__button {
     background: var(--ink);
     color: var(--bg);
-    padding: 0.65rem 1.6rem;
+    padding: 0.5rem 1.25rem;
     border-radius: var(--radius-pill);
-    font-size: 0.9rem;
+    font-size: 0.825rem;
     font-weight: 500;
+    letter-spacing: 0.01em;
     transition: opacity 0.15s ease;
 
     &:hover {
-      opacity: 0.85;
+      opacity: 0.8;
     }
 
     &:disabled {
-      opacity: 0.4;
+      opacity: 0.3;
       cursor: not-allowed;
     }
   }
 
   @media (max-width: 480px) {
-    padding: 1rem;
+    padding: 0.875rem 1rem;
+
+    &__footer {
+      margin-top: 0.5rem;
+    }
 
     &__button {
       width: 100%;
       text-align: center;
+      padding: 0.6rem;
     }
 
-    &__footer {
-      margin-top: 0.6rem;
+    &__hint {
+      display: none;
     }
   }
 }

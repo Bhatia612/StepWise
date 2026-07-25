@@ -9,9 +9,9 @@ const difficultyColor = {
 };
 
 const HistoryList = ({ history, loading, error, onSelect }) => {
-  if (loading) return <p className="history-list__status">Loading history...</p>;
+  if (loading) return <p className="history-list__status">Loading...</p>;
   if (error) return <p className="history-list__status">{error}</p>;
-  if (history.length === 0) return <p className="history-list__status">No explanations yet.</p>;
+  if (history.length === 0) return <p className="history-list__status">No history yet.</p>;
 
   const grouped = groupByPattern(history);
 
@@ -35,7 +35,6 @@ const HistoryList = ({ history, loading, error, onSelect }) => {
                 style={{ background: difficultyColor[item.difficulty] }}
               />
               <span className="history-list__problem">{item.problem}</span>
-              <span className="history-list__time">{formatRelativeTime(item.createdAt)}</span>
               <span className="history-list__chevron">›</span>
             </button>
           ))}

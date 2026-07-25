@@ -2,7 +2,7 @@
 
 A DSA thinking coach - paste a problem, get the thought process behind it, not the solution.
 
-Built with React, Node.js, MongoDB, Redis, and the Claude API.
+Built with React, Node.js, MongoDB, Redis, the Claude API, and Stripe.
 
 ---
 
@@ -16,10 +16,12 @@ Most platforms just give you the answer. StepWise explains how to think about th
 
 - Explains DSA problems step by step without revealing code
 - Streams responses in real time as Claude generates them
-- Guest mode - try it without an account, up to 3 free explains
+- Guest mode - 3 free explains without an account, soft nudge after the first
 - Sign up to keep your history permanently - guest history migrates automatically
+- Registered users get 5 free credits on signup, each explain costs 1
+- Buy more credits via Stripe when you run out
 - History grouped by pattern with relative timestamps
-- Rate limited to protect the API
+- Rate limited to protect the Claude API
 
 ---
 
@@ -30,6 +32,7 @@ Most platforms just give you the answer. StepWise explains how to think about th
 - **Databases:** MongoDB for users, Redis for guest sessions and rate limiting
 - **Auth:** JWT in httpOnly cookies
 - **AI:** Claude API with SSE streaming
+- **Payments:** Stripe
 
 ---
 

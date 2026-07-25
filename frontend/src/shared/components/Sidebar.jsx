@@ -4,29 +4,38 @@ import { PanelLeftClose, PanelLeftOpen, LogOut, User, Sun, Moon } from "lucide-r
 import HistoryList from "../../features/explainer/components/HistoryList";
 import "../styles/Sidebar.scss";
 
-const Sidebar = ({ history, historyLoading, historyError, onSelectHistory }) => {
+const Sidebar = ({ history, historyLoading, historyError, onSelectHistory, isOpen, onClose }) => {
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem("sw_theme") || "light";
-  });
+  const [theme, setTheme] = useState(() => localStorage.getItem("sw_theme") || "light");
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("sw_theme", theme);
   }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"));
+
+  const handleHeaderToggle = () => {
+    if (window.innerWidth <= 768) {
+      onClose();
+    } else {
+      setCollapsed((prev) => !prev);
+    }
   };
 
   return (
-    <aside className={`sidebar ${collapsed ? "sidebar--collapsed" : ""}`}>
+    <aside
+      className={`sidebar ${collapsed ? "sidebar--collapsed" : ""} ${
+        isOpen ? "sidebar--open" : ""
+      }`}
+    >
       <div className="sidebar__header">
         {!collapsed && <span className="sidebar__logo">StepWise</span>}
         <button
           className="sidebar__toggle"
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={handleHeaderToggle}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
         </button>
@@ -42,7 +51,10 @@ const Sidebar = ({ history, historyLoading, historyError, onSelectHistory }) => 
                 history={history}
                 loading={historyLoading}
                 error={historyError}
-                onSelect={onSelectHistory}
+                onSelect={(item) => {
+                  onSelectHistory(item);
+                  onClose();
+                }}
               />
             )}
           </div>

@@ -89,7 +89,7 @@ const PricingModal = ({ onClose, outOfCredits = false }) => {
               className={`pricing-modal__pack ${pack.highlight ? "pricing-modal__pack--highlight" : ""}`}
             >
               {pack.highlight && (
-                <span className="pricing-modal__badge">Most popular</span>
+                <span className="pricing-modal__badge">Recommended</span>
               )}
               <h3 className="pricing-modal__pack-name">{pack.name}</h3>
               <p className="pricing-modal__pack-credits">{pack.credits} credits</p>

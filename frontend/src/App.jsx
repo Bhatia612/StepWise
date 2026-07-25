@@ -15,6 +15,7 @@ const AppContent = () => {
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState(null);
   const [selectedHistory, setSelectedHistory] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const fetchHistory = async () => {
     setHistoryLoading(true);
@@ -61,9 +62,14 @@ const AppContent = () => {
         historyLoading={historyLoading}
         historyError={historyError}
         onSelectHistory={(item) => setSelectedHistory(item)}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
       <div className="app-layout__main">
-        <Navbar />
+        <Navbar
+          onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+          sidebarOpen={sidebarOpen}
+        />
         <ExplainerPage
           selectedHistory={selectedHistory}
           onExplainComplete={fetchHistory}

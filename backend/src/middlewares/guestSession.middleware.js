@@ -11,8 +11,8 @@ const guestSession = (req, res, next) => {
     sessionId = uuidv4();
     res.cookie("guestSessionId", sessionId, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000,
     });
   }

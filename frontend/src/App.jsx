@@ -8,8 +8,9 @@ import { getAllExplanations } from "./features/explainer/services/explainerServi
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 
+
 const AppContent = () => {
-  const { updateCredits } = useAuth();
+  const { user, updateCredits } = useAuth();
   const [toast, setToast] = useState(null);
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -31,7 +32,7 @@ const AppContent = () => {
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [user?.id]);
 
   useEffect(() => {
     const path = window.location.pathname;
@@ -44,7 +45,6 @@ const AppContent = () => {
         .then((data) => {
           if (data.success) updateCredits(data.data.credits);
         });
-
       if (credits) setToast(`${credits} credits added to your account!`);
       window.history.replaceState({}, "", "/");
     }

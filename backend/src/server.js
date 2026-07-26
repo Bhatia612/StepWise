@@ -17,8 +17,16 @@ const startServer = async () => {
   const authRoutes = require("./routes/auth.routes");
   const paymentRoutes = require("./routes/payment.routes");
 
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "https://step-wise-sooty.vercel.app",
+  ];
+
   app.use(cors({
-    origin: "http://localhost:5173",
+    origin(origin, cb) {
+      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+      cb(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   }));
 

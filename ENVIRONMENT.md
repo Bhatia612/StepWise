@@ -8,7 +8,7 @@ cp .env.example .env
 
 ---
 
-## Variables
+## Backend Variables
 
 | Variable | Description |
 |---|---|
@@ -21,6 +21,14 @@ cp .env.example .env
 | `STRIPE_SECRET_KEY` | Stripe secret key from dashboard.stripe.com |
 | `STRIPE_WEBHOOK_SECRET` | Webhook signing secret from Stripe CLI or dashboard |
 | `FRONTEND_URL` | Frontend origin for Stripe redirects |
+
+## Frontend Variables
+
+Set in Vercel project settings (or a local `.env` in the frontend folder):
+
+| Variable | Description |
+|---|---|
+| `VITE_API_URL` | API base path. Set to `/api/v1` in production (proxied through `vercel.json` to the Render backend — this keeps the auth cookie first-party instead of third-party, which is required for it to survive on mobile browsers). Falls back to `http://localhost:5000/api/v1` for local dev if unset. |
 
 ## Generate JWT_SECRET
 

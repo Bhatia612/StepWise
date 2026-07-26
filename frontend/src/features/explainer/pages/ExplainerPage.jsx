@@ -97,18 +97,17 @@ const ExplainerPage = ({ selectedHistory, onExplainComplete, onClearSelected }) 
     explain(problemText);
   };
 
-  const handleExampleClick = (problemText) => {
+const handleExampleClick = (problemText) => {
     const count = parseInt(localStorage.getItem(GUEST_EXPLAIN_KEY) || "0");
     if (!user && count >= 3) {
       setHardBlock(true);
       setShowNudge(true);
       return;
     }
-    setProblem(problemText);
     setSubmittedProblem(problemText);
     if (onClearSelected) onClearSelected();
     explain(problemText);
-  };
+};
 
   const displayedExplanation = selectedHistory || data;
   const displayedProblem = selectedHistory?.problem || submittedProblem;

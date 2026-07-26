@@ -134,6 +134,20 @@ Two middleware variants:
 
 ---
 
+## Cross-Origin Deployment (Vercel Proxy)
+
+Frontend (Vercel) and backend (Render) are deployed on separate domains. Browsers treat cookies set by a different domain than the page as third-party cookies — mobile browsers (Chrome, Safari, Brave) block these aggressively, which broke auth persistence on refresh on mobile despite working fine on desktop.
+
+Fix: Vercel rewrites proxy all `/api/*` requests from the frontend's own domain through to the Render backend, server-side.
+
+```
+Browser -> yourapp.vercel.app/api/v1/... -> (Vercel rewrite) -> Render backend
+```
+
+From the browser's perspective, it's only ever talking to one origin, so the `token` cookie is first-party rather than third-party. This is why `VITE_API_URL` is set to a relative `/api/v1` path in production rather than the full Render URL — pointing directly at Render would bypass the proxy and reintroduce the cross-site cookie problem.
+
+See `ENVIRONMENT.md` for the exact variable, and `vercel.json` for the rewrite rule.
+
 ## Streaming
 
 /explain uses Server-Sent Events instead of a standard HTTP response. The backend streams Claude's output as NDJSON lines - each line is a complete JSON object representing one piece of the explanation (meta, section, trace, pitfalls, complexity). The frontend parses each line as it arrives and builds the ExplanationCard progressively.

@@ -2,6 +2,8 @@
 
 Base URL: `http://localhost:5000/api/v1`
 
+> In production, the frontend calls a relative `/api/v1` path, proxied through Vercel to the Render backend (see `ENVIRONMENT.md` / `ARCHITECTURE.md` for why).
+
 ---
 
 ## Rate Limits

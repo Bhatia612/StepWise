@@ -35,7 +35,7 @@ const Navbar = ({ onToggleSidebar, sidebarOpen }) => {
             <>
               {guestCredits !== null && (
                 <span className="navbar__guest-credits">
-                  ⚡ {guestCredits} free left
+                  ⚡ {guestCredits} free credits
                 </span>
               )}
               <button
